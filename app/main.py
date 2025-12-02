@@ -1,17 +1,15 @@
-from typing import Callable
+from typing import Callable, Any
 
 
 def cache(func: Callable) -> Callable:
-    args_set = {}
+    cache_storage = {}
 
-    def decorator(*args) -> Callable:
-        for key, arg in args_set.items():
-            if key == args:
-                print("Getting from cache")
-                return arg
-        print("Calculating new result")
-        result_of_operation = func(*args)
-        args_set[args] = result_of_operation
-        return result_of_operation
+    def decorator(*args) -> Any:
+        if args not in cache_storage:
+            print("Calculating new result")
+            cache_storage[args] = func(*args)
+        else:
+            print("Getting from cache")
+        return cache_storage[args]
 
     return decorator
